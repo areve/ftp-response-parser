@@ -25,6 +25,7 @@ util.inherits(ResponseParser, stream.Transform);
 ResponseParser.prototype._transform = function(chunk, encoding, done) {
   var data = this.fragment + chunk.toString();
   this.fragment = /[^\n]*$/.exec(data)[0];
+  data = data.slice(0, data.length - this.fragment.length);
 
   var lines = data.split(/\r?\n/).filter(function(l) {
     return !!l;
