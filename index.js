@@ -13,6 +13,7 @@ function isMark(code) {
 function ResponseParser() {
   this. currentCode = 0;
   this. buffer = [];
+  this. fragment = '';
 
   stream.Transform.call(this, {
     objectMode: true
@@ -22,7 +23,9 @@ function ResponseParser() {
 util.inherits(ResponseParser, stream.Transform);
 
 ResponseParser.prototype._transform = function(chunk, encoding, done) {
-  var data = chunk.toString();
+  var data = this.fragment + chunk.toString();
+  this.fragment = /[^\n]*$/.exec(data)[0];
+
   var lines = data.split(/\r?\n/).filter(function(l) {
     return !!l;
   });
